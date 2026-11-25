@@ -333,10 +333,14 @@ class PocketKaliActivity : Activity() {
                 desktopStarted = true
                 runOnUiThread {
                     status.text = "Kali XFCE desktop is running."
+                    headerTitle.visibility = View.GONE
+                    subTitle.visibility = View.GONE
+                    homePanel.visibility = View.GONE
+                    desktopHint.visibility = View.GONE
                     webView.visibility = View.VISIBLE
+                    terminalScroll.visibility = View.GONE
+                    commandRow.visibility = View.GONE
                     webView.loadUrl("http://127.0.0.1:6080/vnc.html?host=127.0.0.1&port=6080&autoconnect=true&resize=scale")
-                    output.visibility = View.GONE
-                    commandInput.visibility = View.GONE
                 }
             } catch (e: Exception) {
                 runOnUiThread { status.text = "Could not start XFCE: " + e.message; desktop.isEnabled = true }
@@ -380,6 +384,12 @@ class PocketKaliActivity : Activity() {
     override fun onBackPressed() {
         if (webView.visibility == View.VISIBLE) {
             webView.visibility = View.GONE
+            headerTitle.visibility = View.VISIBLE
+            subTitle.visibility = View.VISIBLE
+            homePanel.visibility = View.VISIBLE
+            desktopHint.visibility = View.VISIBLE
+            terminalScroll.visibility = View.VISIBLE
+            commandRow.visibility = View.VISIBLE
             output.visibility = View.VISIBLE
             commandInput.visibility = View.VISIBLE
             status.text = "Kali XFCE desktop is running in the background."
