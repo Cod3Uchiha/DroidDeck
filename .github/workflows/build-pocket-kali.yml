@@ -1,0 +1,37 @@
+name: Build Pocket Kali ARM64 rootfs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rootfs:
+    # Native ARM64 runner: no QEMU emulation for package post-install scripts.
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Kali ARM64 image
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build --platform linux/arm64 -f tools/kali/Dockerfile -t pocket-kali-rootfs:arm64 .
+          cid="$(docker create --platform linux/arm64 pocket-kali-rootfs:arm64)"
+          trap 'docker rm -f "$cid" >/dev/null 2>&1 || true' EXIT
+          mkdir -p out
+          docker export "$cid" | zstd -T0 -10 -o out/pocket-kali-arm64.tar.zst
+          sha256sum out/pocket-kali-arm64.tar.zst > out/pocket-kali-arm64.tar.zst.sha256
+          du -h out/pocket-kali-arm64.tar.zst
+
+      - name: Upload rootfs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pocket-kali-arm64-rootfs
+          path: |
+            out/pocket-kali-arm64.tar.zst
+            out/pocket-kali-arm64.tar.zst.sha256
+          if-no-files-found: error
+          retention-days: 14
