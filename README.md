@@ -5,7 +5,7 @@
 The target is a full **Kali Linux XFCE** environment running alongside Android without replacing the Android kernel or requiring root. The existing Arch-based gaming runtime is kept separate rather than overwritten.
 
 <blockquote>
-  <strong>Development status:</strong> Early prototype. This branch currently contains a Kali ARM64 root-filesystem builder and integration design notes. The Kali root-filesystem build is still being validated. The Android installer, Kali desktop launcher, and installable Pocket Kali APK are not implemented yet.
+  <strong>Development status:</strong> Android app prototype. The launcher now opens a dedicated Pocket Kali screen with a SHA-256-verified Kali ARM64 rootfs download/extractor and a PRoot terminal entry point. The XFCE graphical session is not yet connected, and no tested APK has been published.
 </blockquote>
 
 <p align="center">
