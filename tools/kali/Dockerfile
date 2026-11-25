@@ -26,6 +26,6 @@ RUN printf '%s\n' \
  && test -x /usr/bin/vncserver \
  && test -x /usr/bin/websockify \
  && test -f /usr/share/novnc/vnc.html \
- && test "$(dpkg-query -W -f='\${db:Status-Status}\n' kali-linux-headless kali-desktop-xfce | grep -c '^installed$')" -eq 2
+ && test "$(dpkg-query -W -f='${db:Status-Status}\n' kali-linux-headless kali-desktop-xfce | grep -c '^installed$')" -eq 2
 
 CMD ["/usr/bin/startxfce4"]
