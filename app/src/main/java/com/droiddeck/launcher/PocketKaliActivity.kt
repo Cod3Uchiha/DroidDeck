@@ -293,7 +293,7 @@ class PocketKaliActivity : Activity() {
         check(vncDir.mkdirs() || vncDir.isDirectory) { "Could not create VNC config directory." }
         val startup = File(vncDir, "xstartup")
         startup.writeText("#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nexec dbus-launch --exit-with-session startxfce4\n")
-        check(startup.setExecutable(true, true)) { "Could not mark XFCE startup script executable." }
+        check(startup.setExecutable(true, true)) { "Could not mark XFCE startup script executable." }\n        val tigervncStartup = File(vncDir, "Xtigervnc-session")\n        tigervncStartup.writeText(startup.readText())\n        check(tigervncStartup.setExecutable(true, true)) { "Could not mark TigerVNC XFCE session executable." }
     }
 
     private fun startDesktop() {
@@ -305,7 +305,7 @@ class PocketKaliActivity : Activity() {
                 ensureProot()
                 writeXStartup()
                 val vnc = ProcessBuilder(runtimeCommand(
-                    "/usr/bin/vncserver", "-fg", ":1", "-localhost", "yes",
+                    "/usr/bin/vncserver", "-fg", ":1", "-xstartup", "/root/.vnc/xstartup", "-localhost", "yes",
                     "-geometry", "1280x800", "-depth", "24", "-SecurityTypes", "None"
                 )).redirectErrorStream(true).start()
                 vncServerProcess = vnc
