@@ -293,7 +293,10 @@ class PocketKaliActivity : Activity() {
         check(vncDir.mkdirs() || vncDir.isDirectory) { "Could not create VNC config directory." }
         val startup = File(vncDir, "xstartup")
         startup.writeText("#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nexec dbus-launch --exit-with-session startxfce4\n")
-        check(startup.setExecutable(true, true)) { "Could not mark XFCE startup script executable." }\n        val tigervncStartup = File(vncDir, "Xtigervnc-session")\n        tigervncStartup.writeText(startup.readText())\n        check(tigervncStartup.setExecutable(true, true)) { "Could not mark TigerVNC XFCE session executable." }
+        check(startup.setExecutable(true, true)) { "Could not mark XFCE startup script executable." }
+        val tigervncStartup = File(vncDir, "Xtigervnc-session")
+        tigervncStartup.writeText(startup.readText())
+        check(tigervncStartup.setExecutable(true, true)) { "Could not mark TigerVNC XFCE session executable." }
     }
 
     private fun startDesktop() {
