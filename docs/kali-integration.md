@@ -12,7 +12,7 @@ Pocket Kali (PK) is building a genuine Kali Linux ARM64 userspace with XFCE for 
 
 ## Build prototype
 
-To build a distributable ARM64 image, open **Actions → Build Pocket Kali ARM64 rootfs → Run workflow**. The workflow builds from the official `kalilinux/kali-rolling` container on a native ARM64 runner and uploads `pocket-kali-arm64-rootfs` as a downloadable workflow artifact. The artifact is a Kali userspace archive, not an APK.\n\nFor a local debootstrap-based build, use a native ARM64 Debian/Kali Linux machine with `debootstrap`, `zstd`, and standard mount utilities:
+To build a distributable ARM64 image, open **Actions → Build Pocket Kali ARM64 rootfs → Run workflow**. The workflow builds from the official `kalilinux/kali-rolling` container on a native ARM64 runner and publishes `pocket-kali-arm64.tar.zst` and its SHA-256 file to the [Pocket Kali ARM64 Rootfs prerelease](https://github.com/Cod3Uchiha/DroidDeck/releases/tag/pocket-kali-rootfs). A workflow artifact is also uploaded. This is a Kali userspace archive, not an APK.\n\nFor a local debootstrap-based build, use a native ARM64 Debian/Kali Linux machine with `debootstrap`, `zstd`, and standard mount utilities:
 
 ```sh
 sudo bash tools/kali/build-rootfs.sh
