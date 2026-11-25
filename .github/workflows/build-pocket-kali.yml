@@ -1,6 +1,12 @@
 name: Build Pocket Kali ARM64 rootfs
 
 on:
+  push:
+    branches:
+      - cod3uchiha/kali-rootfs
+    paths:
+      - 'tools/kali/**'
+      - '.github/workflows/build-pocket-kali.yml'
   workflow_dispatch:
 
 permissions:
