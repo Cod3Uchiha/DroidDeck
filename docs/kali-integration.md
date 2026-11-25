@@ -7,7 +7,7 @@ Pocket Kali is a community project to provide a genuine Kali Linux ARM64 userspa
 - Android application branding and application ID: `com.cod3uchiha.pocketkali`.
 - A Docker build definition based on the official `kalilinux/kali-rolling` image.
 - Kali's `kali-linux-headless` tool metapackage, XFCE, terminal, DBus, networking tools and common development utilities in the rootfs definition.
-- A native ARM64 GitHub Actions workflow that exports a compressed root filesystem, validates the archive and checksum, and publishes the rootfs as a prerelease asset.
+- A native ARM64 GitHub Actions workflow that exports a compressed root filesystem, validates the archive and checksum, and publishes the rootfs as a prerelease asset.\n- A dedicated Pocket Kali launcher activity replacing the DroidDeck frontend as the app's launcher target.\n- An app-private rootfs download and extraction flow with a pinned SHA-256 check and the existing path-safe Zstandard/TAR extractor.\n- A basic terminal screen that provisions the PRoot add-on and starts `/bin/bash` inside the Kali rootfs.
 - A separate debootstrap builder for native ARM64 Debian/Kali build hosts.
 
 ## Build the Kali root filesystem
