@@ -12,19 +12,19 @@ Pocket Kali (PK) is building a genuine Kali Linux ARM64 userspace with XFCE for 
 
 ## Build prototype
 
-On a native ARM64 Debian/Kali Linux build machine, install `debootstrap`, `zstd`, and standard mount utilities, then run:
+To build a distributable ARM64 image, open **Actions → Build Pocket Kali ARM64 rootfs → Run workflow**. The workflow builds from the official `kalilinux/kali-rolling` container on a native ARM64 runner and uploads `pocket-kali-arm64-rootfs` as a downloadable workflow artifact. The artifact is a Kali userspace archive, not an APK.\n\nFor a local debootstrap-based build, use a native ARM64 Debian/Kali Linux machine with `debootstrap`, `zstd`, and standard mount utilities:
 
 ```sh
 sudo bash tools/kali/build-rootfs.sh
 ```
 
-The script creates `out/kali-arm64.tar.zst` and a SHA-256 file. The image includes XFCE, terminal, networking utilities, Python and build tools, and Kali's headless metapackage.
+The script creates `out/kali-arm64.tar.zst` and a SHA-256 file. It includes XFCE, terminal, networking utilities, Python and build tools.
 
 ## Not provided by a rootless userspace
 
 A Kali rootfs does not grant kernel capabilities. In particular, it does not enable internal Wi-Fi monitor mode or packet injection, load kernel modules, replace the Android kernel, or provide unrestricted access to USB/Wi-Fi hardware. Those require compatible kernel drivers and privileges/hardware support.
 
-## Next app integration work
+## Current implementation status\n\n- A native ARM64 GitHub Actions workflow now builds a Kali container root filesystem and publishes it as a short-lived workflow artifact.\n- The Android app does not yet download, verify, install, or launch this image.\n- The image's XFCE session is not yet connected to the app's Android display/compositor.\n\n## Next app integration work
 
 1. Add an independent Kali install record, download/verification flow, and storage directory under app-private storage.
 2. Reuse the base project's PRoot launcher and bind only the Android resources needed by the guest.
