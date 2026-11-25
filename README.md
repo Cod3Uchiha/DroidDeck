@@ -38,18 +38,8 @@ The target is a full **Kali Linux XFCE** environment running alongside Android w
 
 The Android application is still based on DroidDeck's build system. Build requirements and commands below apply to the underlying Android project; they do not mean a Pocket Kali APK with the Kali desktop integration is already available.
 
-## Install
+## Build the Android base
 
-1. Android 9 or newer on Adreno 730 or newer, or any 8xx. Adreno 6xx, Mali, Xclipse and PowerVR are experimental. Adreno 710 is currently unsupported. No root needed.
-2. About 3 GB free for the runtime, plus 1.1 GB for the desktop and emulators.
-3. Install the [APK](https://github.com/Droid-Deck/DroidDeck/releases/download/0.7.11/DroidDeck-0.7.11.apk), install the Linux runtime, press **Play** and sign in to Steam.
-4. On Android 14 and newer, turn on **Disable child process restrictions** in Developer options. On Android 12 and 13, Steam's first launch shows a **Fix it for me** button that walks you through it.
-
-Smart glasses setup is in the [support matrix](docs/smart-glasses-support.md). Release notes are in [docs/releases](docs/releases).
-
-Help, Preview builds and device reports are on [Discord](https://discord.gg/JRGAvawjsm). For bugs, post in **#bug-reports** with the zip from **Share logs**.
-
-## Build
 
 Needs Docker, Java 17, the Android SDK and NDK, Rust via rustup, Go, a host C compiler, the x86_64 and i686 MinGW-w64 compilers (i686 with DWARF-2 exceptions, as Debian and Ubuntu ship it; SJLJ builds such as Homebrew's cannot link Rust's `i686-pc-windows-gnu`), GitHub CLI, Python 3 and `zstd`. On x86_64 Linux, Docker also needs an arm64 binfmt handler (`docker run --privileged --rm tonistiigi/binfmt --install arm64`).
 
