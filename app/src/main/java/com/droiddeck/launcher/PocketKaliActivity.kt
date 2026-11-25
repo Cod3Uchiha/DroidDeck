@@ -307,10 +307,14 @@ class PocketKaliActivity : Activity() {
             try {
                 ensureProot()
                 writeXStartup()
-                val vnc = ProcessBuilder(runtimeCommand(
+                val vncBuilder = ProcessBuilder(runtimeCommand(
                     "/usr/bin/vncserver", "-fg", ":1", "-xstartup", "/root/.vnc/xstartup", "-localhost", "yes",
                     "-geometry", "1280x800", "-depth", "24", "-SecurityTypes", "None"
-                )).redirectErrorStream(true).start()
+                )).redirectErrorStream(true)
+                vncBuilder.environment()["HOME"] = "/root"
+                vncBuilder.environment()["USER"] = "root"
+                vncBuilder.environment()["LOGNAME"] = "root"
+                val vnc = vncBuilder.start()
                 vncServerProcess = vnc
                 thread(name = "pocket-kali-vnc-log") {
                     vnc.inputStream.bufferedReader().useLines { lines ->
