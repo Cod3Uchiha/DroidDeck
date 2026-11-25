@@ -129,7 +129,7 @@ android {
         .asText.get().readLines().find { it.startsWith('CI_ANDROID_NDK_VERSION=') }.split('=', 2)[1].trim()
 
     defaultConfig {
-        applicationId "com.droiddeck.launcher"
+        applicationId "com.cod3uchiha.pocketkali"
         minSdkVersion 26
         targetSdkVersion 34
         versionCode 20
@@ -193,7 +193,7 @@ android {
             def localSuffix = localBuildOptions.getProperty('droiddeck.debugApplicationIdSuffix')
             if (localSuffix) {
                 applicationIdSuffix localSuffix
-                resValue 'string', 'app_name', 'DroidDeck XR Dev'
+                resValue 'string', 'app_name', 'Pocket Kali (PK) Dev'
             }
         }
         release {
