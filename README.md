@@ -1,7 +1,3 @@
-<p align="center">
-  <img alt="Pocket Kali (PK)" src="artwork/droiddeck-banner-dark.svg" width="100%">
-</p>
-
 # Pocket Kali (PK)
 
 **Pocket Kali** is a project to bring a genuine Kali Linux ARM64 desktop to Android devices, using DroidDeck's Android runtime and desktop foundations.
@@ -34,11 +30,9 @@ The target is a full **Kali Linux XFCE** environment running alongside Android w
 
 **Important:** Running Kali in a rootless userspace does not provide Wi-Fi monitor mode, packet injection, kernel-module loading, Android kernel replacement, or unrestricted hardware access. These capabilities depend on the device kernel, drivers, hardware, and privileges.
 
-## Build
-
-The Android application is still based on DroidDeck's build system. Build requirements and commands below apply to the underlying Android project; they do not mean a Pocket Kali APK with the Kali desktop integration is already available.
-
 ## Build the Android base
+
+The Android application is still based on DroidDeck's build system. These commands build the underlying Android project; they do not mean a Pocket Kali APK with the Kali desktop integration is already available.
 
 
 Needs Docker, Java 17, the Android SDK and NDK, Rust via rustup, Go, a host C compiler, the x86_64 and i686 MinGW-w64 compilers (i686 with DWARF-2 exceptions, as Debian and Ubuntu ship it; SJLJ builds such as Homebrew's cannot link Rust's `i686-pc-windows-gnu`), GitHub CLI, Python 3 and `zstd`. On x86_64 Linux, Docker also needs an arm64 binfmt handler (`docker run --privileged --rm tonistiigi/binfmt --install arm64`).
