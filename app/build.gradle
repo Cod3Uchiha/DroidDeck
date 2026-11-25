@@ -232,7 +232,7 @@ android {
                 outputs.doNotCacheIf('CI executes the test suite on every run') { true }
             }
             maxHeapSize = '2g'
-            maxParallelForks = 2
+            maxParallelForks = 1
             def jvmTemp = new File(temporaryDir, 'jvm')
             systemProperty 'java.io.tmpdir', jvmTemp.absolutePath
             doFirst { jvmTemp.mkdirs() }
