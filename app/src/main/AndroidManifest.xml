@@ -174,7 +174,7 @@
 
         <activity-alias
             android:name=".MainActivity"
-            android:targetActivity=".FrontEndActivity"
+            android:targetActivity=".PocketKaliActivity"
             android:icon="@mipmap/ic_launcher"
             android:exported="true">
             <intent-filter>
@@ -186,7 +186,7 @@
 
         <activity-alias
             android:name=".LauncherLight"
-            android:targetActivity=".FrontEndActivity"
+            android:targetActivity=".PocketKaliActivity"
             android:icon="@mipmap/ic_launcher_light"
             android:enabled="false"
             android:exported="true">
