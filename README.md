@@ -26,13 +26,13 @@ The target is a full **Kali Linux XFCE** environment running alongside Android w
 ## Current implementation
 
 - [Kali rootfs builder](tools/kali/build-rootfs.sh) — prototype for creating a Kali ARM64 XFCE root filesystem.
-- [Kali integration plan](docs/kali-integration.md) — architecture, limitations, and remaining app work.
+- [Kali integration status](docs/kali-integration.md) — implemented app flow, architecture, limitations, and remaining desktop work.
 
 **Important:** Running Kali in a rootless userspace does not provide Wi-Fi monitor mode, packet injection, kernel-module loading, Android kernel replacement, or unrestricted hardware access. These capabilities depend on the device kernel, drivers, hardware, and privileges.
 
 ## Build the Android base
 
-The Android application is still based on DroidDeck's build system. These commands build the underlying Android project; they do not mean a Pocket Kali APK with the Kali desktop integration is already available.
+The Android application retains DroidDeck's underlying PRoot and native runtime foundations, but its launcher now opens Pocket Kali. The terminal installer is an early prototype; XFCE display/session integration, CI validation, and physical-device testing remain before an installable release.
 
 
 Needs Docker, Java 17, the Android SDK and NDK, Rust via rustup, Go, a host C compiler, the x86_64 and i686 MinGW-w64 compilers (i686 with DWARF-2 exceptions, as Debian and Ubuntu ship it; SJLJ builds such as Homebrew's cannot link Rust's `i686-pc-windows-gnu`), GitHub CLI, Python 3 and `zstd`. On x86_64 Linux, Docker also needs an arm64 binfmt handler (`docker run --privileged --rm tonistiigi/binfmt --install arm64`).
