@@ -231,20 +231,29 @@ class PocketKaliActivity : Activity() {
 
     private fun openTerminal() {
         if (!installed()) return
-        try {
-            val binds = LinuxRuntime.binds(this, null, null, Environment.getExternalStorageDirectory(), null)
-            val command = LinuxRuntime.commandWithBinds(this, root, binds, listOf("/bin/bash", "-l"))
-            val process = ProcessBuilder(command).redirectErrorStream(true).start()
-            shell = process
-            output.text = "Pocket Kali terminal started.\\n"
-            thread(name = "pocket-kali-output") {
-                process.inputStream.bufferedReader().useLines { lines ->
-                    lines.forEach { line -> runOnUiThread { output.append("$line\\n") } }
+        launch.isEnabled = false
+        output.append("Preparing PRoot runtime…\\n")
+        thread(name = "pocket-kali-launch") {
+            try {
+                check(com.droiddeck.launcher.core.AddonPack.PROOT.await(this)) {
+                    "Could not install PRoot: ${com.droiddeck.launcher.core.AddonPack.PROOT.failure ?: "runtime unavailable"}"
+                }
+                val binds = LinuxRuntime.binds(this, null, null, Environment.getExternalStorageDirectory(), null)
+                val command = LinuxRuntime.commandWithBinds(this, root, binds, listOf("/bin/bash", "-l"))
+                val process = ProcessBuilder(command).redirectErrorStream(true).start()
+                shell = process
+                runOnUiThread { output.append("Pocket Kali terminal started.\\n") }
+                thread(name = "pocket-kali-output") {
+                    process.inputStream.bufferedReader().useLines { lines ->
+                        lines.forEach { line -> runOnUiThread { output.append("$line\\n") } }
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    output.append("Could not start PRoot: ${e.message}\\n")
+                    launch.isEnabled = true
                 }
             }
-            launch.isEnabled = false
-        } catch (e: Exception) {
-            output.append("Could not start PRoot: ${e.message}\\nInstall/build the PRoot add-on with the APK.\\n")
         }
     }
 
