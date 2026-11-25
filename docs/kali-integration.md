@@ -1,32 +1,53 @@
-# Pocket Kali (PK) — integration plan
+# Pocket Kali (PK) — implementation status
 
-Pocket Kali (PK) is building a genuine Kali Linux ARM64 userspace with XFCE for Android. This branch currently contains the first root-filesystem build prototype; Android app integration remains outstanding.
+Pocket Kali is a community project to provide a genuine Kali Linux ARM64 userspace with XFCE on Android. The Android host kernel remains in use; this project does not flash a kernel or modify device partitions.
 
-## Design constraints
+## What is implemented in this branch
 
-- Android remains the host OS; no boot image, bootloader, Android kernel, or device partitions are changed.
-- The Kali filesystem is separate from the existing Arch-based gaming runtime inherited from DroidDeck.
-- The build uses Kali's official `kali-rolling` repository and Kali packages. It is not an Arch theme or a renamed Debian image.
-- The target is ARM64 userspace. It uses the Android host kernel through the Android host's unprivileged process/runtime mechanisms.
-- XFCE is the intended desktop. Desktop launch/display integration is a separate app-side task; this builder alone does not add a Kali launch button or claim that the desktop already launches.
+- Android application branding and application ID: `com.cod3uchiha.pocketkali`.
+- A Docker build definition based on the official `kalilinux/kali-rolling` image.
+- Kali's `kali-linux-headless` tool metapackage, XFCE, terminal, DBus, networking tools and common development utilities in the rootfs definition.
+- A native ARM64 GitHub Actions workflow that exports a compressed root filesystem, validates the archive and checksum, and publishes the rootfs as a prerelease asset.
+- A separate debootstrap builder for native ARM64 Debian/Kali build hosts.
 
-## Build prototype
+## Build the Kali root filesystem
 
-To build a distributable ARM64 image, open **Actions → Build Pocket Kali ARM64 rootfs → Run workflow**. The workflow builds from the official `kalilinux/kali-rolling` container on a native ARM64 runner and publishes `pocket-kali-arm64.tar.zst` and its SHA-256 file to the [Pocket Kali ARM64 Rootfs prerelease](https://github.com/Cod3Uchiha/DroidDeck/releases/tag/pocket-kali-rootfs). A workflow artifact is also uploaded. This is a Kali userspace archive, not an APK.\n\nFor a local debootstrap-based build, use a native ARM64 Debian/Kali Linux machine with `debootstrap`, `zstd`, and standard mount utilities:
+Open **Actions → Build Pocket Kali ARM64 rootfs → Run workflow** on the `cod3uchiha/kali-rootfs` branch. The workflow runs on a native ARM64 GitHub-hosted runner and publishes:
+
+- `pocket-kali-arm64.tar.zst`
+- `pocket-kali-arm64.tar.zst.sha256`
+
+The archive is a Kali Linux filesystem, not an APK. The workflow must complete successfully before the release assets exist.
+
+For a local build, use a native ARM64 Debian/Kali host with `debootstrap`, `zstd`, `mount`, and `chroot`:
 
 ```sh
 sudo bash tools/kali/build-rootfs.sh
 ```
 
-The script creates `out/kali-arm64.tar.zst` and a SHA-256 file. It includes XFCE, terminal, networking utilities, Python and build tools.
+This creates `out/kali-arm64.tar.zst` and its SHA-256 file.
 
-## Not provided by a rootless userspace
+## Android app integration — not complete
 
-A Kali rootfs does not grant kernel capabilities. In particular, it does not enable internal Wi-Fi monitor mode or packet injection, load kernel modules, replace the Android kernel, or provide unrestricted access to USB/Wi-Fi hardware. Those require compatible kernel drivers and privileges/hardware support.
+The Android app does not yet contain a dedicated Kali download/install screen, isolated rootfs installer, Kali PRoot launch command, or XFCE session wiring. The existing DroidDeck desktop and gaming runtime is still present; this branch has not replaced its KDE desktop pack. Do not treat the current APK build as a usable Pocket Kali release.
 
-## Current implementation status\n\n- A native ARM64 GitHub Actions workflow now builds a Kali container root filesystem and publishes it as a short-lived workflow artifact.\n- The Android app does not yet download, verify, install, or launch this image.\n- The image's XFCE session is not yet connected to the app's Android display/compositor.\n\n## Next app integration work
+The remaining implementation is:
 
-1. Add an independent Kali install record, download/verification flow, and storage directory under app-private storage.
-2. Reuse the base project's PRoot launcher and bind only the Android resources needed by the guest.
-3. Add a dedicated XFCE session entry using the base project's existing display/compositor path, without replacing the gaming runtime.
-4. Test process restrictions, audio, input, Vulkan/GL limitations, suspend/resume, and cleanup on actual Snapdragon 8 Gen 1 hardware.
+1. Add an app-private Kali rootfs storage location and safe extraction with path-traversal protection.
+2. Download the published archive with resumable progress and verify SHA-256 before extraction.
+3. Launch Kali through the app's existing PRoot runtime, with controlled `/dev`, `/proc`, `/sys`, shared storage and Android networking bindings.
+4. Connect XFCE to the existing Android display/compositor and session lifecycle.
+5. Add uninstall, repair, update, disk-space checks and failure recovery.
+6. Build and test on a physical ARM64 Android device.
+
+## Kernel and hardware limits
+
+A rootless Kali userspace uses the Android kernel. It does not itself enable internal Wi-Fi monitor mode or packet injection, load kernel modules, replace the Android kernel, or grant unrestricted USB/Wi-Fi hardware access. Those capabilities depend on kernel configuration, drivers, hardware, and privileges.
+
+## Project identity
+
+- App ID: `com.cod3uchiha.pocketkali`
+- Project name: Pocket Kali (PK)
+- Intended desktop: XFCE
+- Intended architecture: ARM64
+- Intended privilege model: rootless userspace
