@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   rootfs:
@@ -35,3 +35,15 @@ jobs:
             out/pocket-kali-arm64.tar.zst.sha256
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish rootfs release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: pocket-kali-rootfs
+          name: Pocket Kali ARM64 Rootfs
+          prerelease: true
+          make_latest: false
+          files: |
+            out/pocket-kali-arm64.tar.zst
+            out/pocket-kali-arm64.tar.zst.sha256
+          fail_on_unmatched_files: true
