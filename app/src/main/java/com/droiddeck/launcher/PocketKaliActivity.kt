@@ -27,6 +27,10 @@ class PocketKaliActivity : Activity() {
     private val downloadUrl = "https://github.com/Cod3Uchiha/DroidDeck/releases/download/pocket-kali-rootfs/pocket-kali-arm64.tar.zst"
     private val checksumUrl = downloadUrl + ".sha256"
 
+    private lateinit var headerTitle: TextView
+    private lateinit var subTitle: TextView
+    private lateinit var desktopHint: TextView
+    private lateinit var homePanel: LinearLayout
     private lateinit var status: TextView
     private lateinit var progress: ProgressBar
     private lateinit var install: Button
@@ -69,27 +73,27 @@ class PocketKaliActivity : Activity() {
             setBackgroundColor(Color.rgb(25, 32, 42))
         }
         status = TextView(this).apply { textSize = 16f; setTextColor(Color.WHITE) }
-        panel.addView(status)
+        homePanel.addView(status)
         progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 100
             visibility = View.GONE
         }
-        panel.addView(progress)
+        homePanel.addView(progress)
         install = Button(this).apply {
             text = "Install Kali Linux"
             setOnClickListener { installKali() }
         }
-        panel.addView(install, LinearLayout.LayoutParams(-1, 52).apply { topMargin = 12 })
+        homePanel.addView(install, LinearLayout.LayoutParams(-1, 52).apply { topMargin = 12 })
         desktop = Button(this).apply {
             text = "Start XFCE desktop"
             setOnClickListener { startDesktop() }
         }
-        panel.addView(desktop, LinearLayout.LayoutParams(-1, 52).apply { topMargin = 8 })
+        homePanel.addView(desktop, LinearLayout.LayoutParams(-1, 52).apply { topMargin = 8 })
         terminalButton = Button(this).apply {
             text = "Open Kali terminal"
             setOnClickListener { openTerminal() }
         }
-        panel.addView(terminalButton, LinearLayout.LayoutParams(-1, 52).apply { topMargin = 8 })
+        homePanel.addView(terminalButton, LinearLayout.LayoutParams(-1, 52).apply { topMargin = 8 })
         page.addView(panel)
         page.addView(TextView(this).apply {
             text = "XFCE runs in a local VNC session displayed inside this app. VNC and WebSocket services bind only to 127.0.0.1."
