@@ -50,29 +50,40 @@ class PocketKaliActivity : Activity() {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.rgb(12, 15, 20)
         window.navigationBarColor = Color.rgb(12, 15, 20)
+        buildUi()
+        refresh()
+    }
+
+    private fun buildUi() {
         val page = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(24, 28, 24, 18)
             setBackgroundColor(Color.rgb(12, 15, 20))
         }
-        page.addView(TextView(this).apply {
+        headerTitle = TextView(this).apply {
             text = "POCKET KALI"
             textSize = 27f
             setTextColor(Color.WHITE)
             setTypeface(null, android.graphics.Typeface.BOLD)
-        })
-        page.addView(TextView(this).apply {
+        }
+        page.addView(headerTitle)
+        subTitle = TextView(this).apply {
             text = "Kali Linux ARM64 · XFCE desktop"
             textSize = 14f
             setTextColor(Color.LTGRAY)
             setPadding(0, 6, 0, 18)
-        })
-        val panel = LinearLayout(this).apply {
+        }
+        page.addView(subTitle)
+
+        homePanel = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(20, 18, 20, 18)
             setBackgroundColor(Color.rgb(25, 32, 42))
         }
-        status = TextView(this).apply { textSize = 16f; setTextColor(Color.WHITE) }
+        status = TextView(this).apply {
+            textSize = 16f
+            setTextColor(Color.WHITE)
+        }
         homePanel.addView(status)
         progress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 100
@@ -94,13 +105,16 @@ class PocketKaliActivity : Activity() {
             setOnClickListener { openTerminal() }
         }
         homePanel.addView(terminalButton, LinearLayout.LayoutParams(-1, 52).apply { topMargin = 8 })
-        page.addView(panel)
-        page.addView(TextView(this).apply {
+        page.addView(homePanel)
+
+        desktopHint = TextView(this).apply {
             text = "XFCE runs in a local VNC session displayed inside this app. VNC and WebSocket services bind only to 127.0.0.1."
             textSize = 12f
             setTextColor(Color.LTGRAY)
             setPadding(0, 14, 0, 12)
-        })
+        }
+        page.addView(desktopHint)
+
         webView = WebView(this).apply {
             setBackgroundColor(Color.rgb(12, 15, 20))
             settings.javaScriptEnabled = true
@@ -113,26 +127,30 @@ class PocketKaliActivity : Activity() {
             visibility = View.GONE
         }
         page.addView(webView, LinearLayout.LayoutParams(-1, 0, 1f))
+
         output = TextView(this).apply {
-            text = "Kali terminal output appears here.\n"
+            text = "Kali terminal output appears here.\\n"
             textSize = 12f
             setTextColor(Color.rgb(220, 230, 240))
             typeface = android.graphics.Typeface.MONOSPACE
             setTextIsSelectable(true)
         }
-        page.addView(ScrollView(this).apply { addView(output) },
-            LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = 8 })
-        val commandRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        terminalScroll = ScrollView(this).apply { addView(output) }
+        page.addView(terminalScroll, LinearLayout.LayoutParams(-1, 0, 1f).apply { topMargin = 8 })
+
+        commandRow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
         commandInput = EditText(this).apply {
             hint = "Enter Kali command"
             setSingleLine(true)
             setTextColor(Color.WHITE)
         }
         commandRow.addView(commandInput, LinearLayout.LayoutParams(0, 52, 1f))
-        commandRow.addView(Button(this).apply { text = "Run"; setOnClickListener { sendCommand() } })
+        commandRow.addView(Button(this).apply {
+            text = "Run"
+            setOnClickListener { sendCommand() }
+        })
         page.addView(commandRow)
         setContentView(page)
-        refresh()
     }
 
     private fun installed() = File(root, "etc/os-release").isFile &&
