@@ -141,6 +141,12 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".PocketKaliActivity"
+            android:exported="true"
+            android:screenOrientation="user"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|density|keyboard|keyboardHidden|navigation" />
+
+        <activity
             android:name=".FrontEndActivity"
             android:exported="true"
             android:screenOrientation="user"
