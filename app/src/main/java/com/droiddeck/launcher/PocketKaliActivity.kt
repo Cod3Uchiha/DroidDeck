@@ -36,6 +36,7 @@ class PocketKaliActivity : Activity() {
     private lateinit var commandInput: EditText
     private lateinit var webView: WebView
     @Volatile private var terminalProcess: Process? = null
+    @Volatile private var vncServerProcess: Process? = null
     @Volatile private var vncBridgeProcess: Process? = null
     @Volatile private var desktopStarted = false
 
@@ -280,12 +281,17 @@ class PocketKaliActivity : Activity() {
                 ensureProot()
                 writeXStartup()
                 val vnc = ProcessBuilder(runtimeCommand(
-                    "/usr/bin/vncserver", ":1", "-localhost", "yes",
+                    "/usr/bin/vncserver", "-fg", ":1", "-localhost", "yes",
                     "-geometry", "1280x800", "-depth", "24", "-SecurityTypes", "None"
                 )).redirectErrorStream(true).start()
-                val vncLog = vnc.inputStream.bufferedReader().use { it.readText() }
-                check(vnc.waitFor() == 0) { "TigerVNC failed to start: " + vncLog }
-                Thread.sleep(1500)
+                vncServerProcess = vnc
+                thread(name = "pocket-kali-vnc-log") {
+                    vnc.inputStream.bufferedReader().useLines { lines ->
+                        lines.forEach { line -> runOnUiThread { output.append("[VNC] " + line + "\\n") } }
+                    }
+                }
+                Thread.sleep(1800)
+                check(vnc.isAlive) { "TigerVNC did not stay running; check VNC startup output." }
                 val bridge = ProcessBuilder(runtimeCommand(
                     "/usr/bin/websockify", "--web=/usr/share/novnc",
                     "127.0.0.1:6080", "127.0.0.1:5901"
