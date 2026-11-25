@@ -5,7 +5,7 @@
 The target is a full **Kali Linux XFCE** environment running alongside Android without replacing the Android kernel or requiring root. The existing Arch-based gaming runtime is kept separate rather than overwritten.
 
 <blockquote>
-  <strong>Development status:</strong> Android app prototype. The launcher now opens a dedicated Pocket Kali screen with a SHA-256-verified Kali ARM64 rootfs download/extractor and a PRoot terminal entry point. The XFCE graphical session is not yet connected, and no tested APK has been published.
+  <strong>Development status:</strong> Android app prototype. The launcher opens a dedicated Pocket Kali screen with a SHA-256-verified Kali ARM64 rootfs installer, PRoot terminal and an in-app XFCE desktop prototype using TigerVNC plus noVNC. The desktop path still needs CI and physical-device validation; no tested APK has been published.
 </blockquote>
 
 <p align="center">
@@ -32,7 +32,7 @@ The target is a full **Kali Linux XFCE** environment running alongside Android w
 
 ## Build the Android base
 
-The Android application retains DroidDeck's underlying PRoot and native runtime foundations, but its launcher now opens Pocket Kali. The terminal installer is an early prototype; XFCE display/session integration, CI validation, and physical-device testing remain before an installable release.
+The Android application retains DroidDeck's underlying PRoot and native runtime foundations, but its launcher now opens Pocket Kali. The installer and VNC/noVNC desktop path are early prototypes. CI validation, desktop interaction testing and physical-device testing remain before an installable release.
 
 
 Needs Docker, Java 17, the Android SDK and NDK, Rust via rustup, Go, a host C compiler, the x86_64 and i686 MinGW-w64 compilers (i686 with DWARF-2 exceptions, as Debian and Ubuntu ship it; SJLJ builds such as Homebrew's cannot link Rust's `i686-pc-windows-gnu`), GitHub CLI, Python 3 and `zstd`. On x86_64 Linux, Docker also needs an arm64 binfmt handler (`docker run --privileged --rm tonistiigi/binfmt --install arm64`).
