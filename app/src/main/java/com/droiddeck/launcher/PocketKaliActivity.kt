@@ -25,7 +25,7 @@ class PocketKaliActivity : Activity() {
     private val root by lazy { File(filesDir, "pocket-kali-rootfs") }
     private val archive by lazy { File(cacheDir, "pocket-kali-arm64.tar.zst") }
     private val downloadUrl = "https://github.com/Cod3Uchiha/DroidDeck/releases/download/pocket-kali-rootfs/pocket-kali-arm64.tar.zst"
-    private val checksumUrl = "$" + "downloadUrl.sha256"
+    private val checksumUrl = downloadUrl + ".sha256"
 
     private lateinit var status: TextView
     private lateinit var progress: ProgressBar
