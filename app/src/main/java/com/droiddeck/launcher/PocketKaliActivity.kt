@@ -35,6 +35,8 @@ class PocketKaliActivity : Activity() {
     private lateinit var output: TextView
     private lateinit var commandInput: EditText
     private lateinit var webView: WebView
+    private lateinit var terminalScroll: ScrollView
+    private lateinit var commandRow: LinearLayout
     @Volatile private var terminalProcess: Process? = null
     @Volatile private var vncServerProcess: Process? = null
     @Volatile private var vncBridgeProcess: Process? = null
