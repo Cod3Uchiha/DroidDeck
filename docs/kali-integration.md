@@ -15,7 +15,7 @@ This branch adds the first root-filesystem build prototype for a genuine Kali Li
 On a native ARM64 Debian/Kali Linux build machine, install `debootstrap`, `zstd`, and standard mount utilities, then run:
 
 ```sh
-sudo tools/kali/build-rootfs.sh
+sudo bash tools/kali/build-rootfs.sh
 ```
 
 The script creates `out/kali-arm64.tar.zst` and a SHA-256 file. The image includes XFCE, terminal, networking utilities, Python and build tools, and Kali's headless metapackage.
