@@ -141,6 +141,12 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".PocketKaliActivity"
+            android:exported="true"
+            android:screenOrientation="user"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|density|keyboard|keyboardHidden|navigation" />
+
+        <activity
             android:name=".FrontEndActivity"
             android:exported="true"
             android:screenOrientation="user"
@@ -168,7 +174,7 @@
 
         <activity-alias
             android:name=".MainActivity"
-            android:targetActivity=".FrontEndActivity"
+            android:targetActivity=".PocketKaliActivity"
             android:icon="@mipmap/ic_launcher"
             android:exported="true">
             <intent-filter>
@@ -180,7 +186,7 @@
 
         <activity-alias
             android:name=".LauncherLight"
-            android:targetActivity=".FrontEndActivity"
+            android:targetActivity=".PocketKaliActivity"
             android:icon="@mipmap/ic_launcher_light"
             android:enabled="false"
             android:exported="true">

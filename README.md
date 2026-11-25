@@ -1,51 +1,39 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="artwork/droiddeck-banner-dark.svg">
-    <img alt="DroidDeck" src="artwork/droiddeck-banner-light.svg" width="100%">
-  </picture>
-</p>
+# Pocket Kali (PK)
 
-DroidDeck brings the SteamOS experience to Android: Steam Gaming Mode, full Linux desktop, integration with GOG, Epic Games, Xbox, and other storefronts, Steam VR, and more!
+**Pocket Kali** is a project to bring a genuine Kali Linux ARM64 desktop to Android devices, using DroidDeck's Android runtime and desktop foundations.
 
-<p align="center"><b>100% open source. No ads. No Subscriptions. No telemetry. No proprietary components. No source withheld.</b></p>
+The target is a full **Kali Linux XFCE** environment running alongside Android without replacing the Android kernel or requiring root. The existing Arch-based gaming runtime is kept separate rather than overwritten.
 
-<p align="center">
-  <a href="https://github.com/Droid-Deck/DroidDeck/releases/download/0.7.11/DroidDeck-0.7.11.apk"><img src="https://img.shields.io/badge/Download-DroidDeck%200.7.11%20APK-3DDC84?style=for-the-badge&logo=android&logoColor=white" alt="Download DroidDeck 0.7.11"></a>
-  <a href="https://discord.gg/JRGAvawjsm"><img src="https://img.shields.io/badge/Discord-Join%20us-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join the DroidDeck Discord"></a>
-</p>
+<blockquote>
+  <strong>Development status:</strong> Android app prototype. The launcher opens a dedicated Pocket Kali screen with a SHA-256-verified Kali ARM64 rootfs installer, PRoot terminal and an in-app XFCE desktop prototype using TigerVNC plus noVNC. The desktop path still needs CI and physical-device validation; no tested APK has been published.
+</blockquote>
 
 <p align="center">
-  <a href="https://www.star-history.com/droid-deck/droiddeck"><img src="https://api.star-history.com/badge?repo=Droid-Deck/DroidDeck&type=rank&theme=dark" alt="Star History Rank"></a>
+  <a href="https://github.com/Cod3Uchiha/DroidDeck/tree/cod3uchiha/kali-rootfs"><img src="https://img.shields.io/badge/Project-Pocket%20Kali-557CBE?style=for-the-badge&logo=kalilinux&logoColor=white" alt="Pocket Kali source"></a>
+  <a href="https://discord.gg/JRGAvawjsm"><img src="https://img.shields.io/badge/Discord-Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="DroidDeck community"></a>
 </p>
 
-<p align="center">
-  <a href="https://trendshift.io/repositories/267852"><img src="https://trendshift.io/api/badge/trendshift/repositories/267852/daily?language=C" alt="Droid-Deck%2FDroidDeck | Trendshift" width="250" height="55"></a>
-  <a href="https://trendshift.io/repositories/267852"><img src="https://trendshift.io/api/badge/trendshift/repositories/267852/daily?language=Kotlin" alt="Droid-Deck%2FDroidDeck | Trendshift" width="250" height="55"></a>
-</p>
+> Pocket Kali is an independent community fork built on the open-source [DroidDeck](https://github.com/Droid-Deck/DroidDeck) project. It is not an official Kali Linux or DroidDeck release.
 
-<p align="center"><a href="https://www.youtube.com/watch?v=ruaTSm_7a2c"><img src="docs/media/droiddeck-showcase.gif" width="60%" alt="A table of handhelds and phones all running DroidDeck, one waking to the Steam menu, the AYN Thor's bottom screen used as a touchpad, and scrolling around Steam on a phone before swiping to the home screen. Footage from Cyber Dopamine's video, linked."></a></p>
+## What Pocket Kali aims to provide
 
-> The official website is [droid-deck.dev](https://droid-deck.dev). Only download DroidDeck from this repository's [Releases](https://github.com/Droid-Deck/DroidDeck/releases).
+- Genuine Kali Linux ARM64 userspace from Kali's official rolling repositories.
+- A full XFCE desktop session on Android.
+- Rootless operation through Android userspace mechanisms such as PRoot.
+- A separate Kali filesystem that does not replace the existing gaming runtime.
+- A mobile-friendly way to use Kali's package manager and compatible security tools.
 
-<p align="center">
-  <img src="docs/releases/media/0.6.7/library.gif" width="49%" alt="The Library switching source chips, changing the card size and opening the Filter menu">
-  <img src="docs/releases/media/0.3.0/in-game.gif" width="49%" alt="A Windows game running through Proton with the on-screen controls">
-  <img src="docs/releases/media/0.4.0/multi-controller.gif" width="49%" alt="Two controllers playing split screen on one handheld">
-  <img src="docs/releases/media/0.6.7/ubuntu-desktop-discover.jpg" width="49%" alt="The Kubuntu desktop with Discover open">
-</p>
+## Current implementation
 
-## Install
+- [Kali rootfs builder](tools/kali/build-rootfs.sh) — prototype for creating a Kali ARM64 XFCE root filesystem.
+- [Kali integration status](docs/kali-integration.md) — implemented app flow, architecture, limitations, and remaining desktop work.
 
-1. Android 9 or newer on Adreno 730 or newer, or any 8xx. Adreno 6xx, Mali, Xclipse and PowerVR are experimental. Adreno 710 is currently unsupported. No root needed.
-2. About 3 GB free for the runtime, plus 1.1 GB for the desktop and emulators.
-3. Install the [APK](https://github.com/Droid-Deck/DroidDeck/releases/download/0.7.11/DroidDeck-0.7.11.apk), install the Linux runtime, press **Play** and sign in to Steam.
-4. On Android 14 and newer, turn on **Disable child process restrictions** in Developer options. On Android 12 and 13, Steam's first launch shows a **Fix it for me** button that walks you through it.
+**Important:** Running Kali in a rootless userspace does not provide Wi-Fi monitor mode, packet injection, kernel-module loading, Android kernel replacement, or unrestricted hardware access. These capabilities depend on the device kernel, drivers, hardware, and privileges.
 
-Smart glasses setup is in the [support matrix](docs/smart-glasses-support.md). Release notes are in [docs/releases](docs/releases).
+## Build the Android base
 
-Help, Preview builds and device reports are on [Discord](https://discord.gg/JRGAvawjsm). For bugs, post in **#bug-reports** with the zip from **Share logs**.
+The Android application retains DroidDeck's underlying PRoot and native runtime foundations, but its launcher now opens Pocket Kali. The installer and VNC/noVNC desktop path are early prototypes. CI validation, desktop interaction testing and physical-device testing remain before an installable release.
 
-## Build
 
 Needs Docker, Java 17, the Android SDK and NDK, Rust via rustup, Go, a host C compiler, the x86_64 and i686 MinGW-w64 compilers (i686 with DWARF-2 exceptions, as Debian and Ubuntu ship it; SJLJ builds such as Homebrew's cannot link Rust's `i686-pc-windows-gnu`), GitHub CLI, Python 3 and `zstd`. On x86_64 Linux, Docker also needs an arm64 binfmt handler (`docker run --privileged --rm tonistiigi/binfmt --install arm64`).
 

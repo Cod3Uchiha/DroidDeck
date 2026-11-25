@@ -1,0 +1,68 @@
+name: Build Pocket Kali ARM64 rootfs
+
+on:
+  push:
+    branches:
+      - cod3uchiha/kali-rootfs
+    paths:
+      - 'tools/kali/**'
+      - '.github/workflows/build-pocket-kali.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rootfs:
+    # Native ARM64 runner avoids QEMU issues in Kali package maintainer scripts.
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Confirm native ARM64 runner
+        run: test "$(uname -m)" = aarch64
+
+      - name: Build Kali ARM64 image
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build --platform linux/arm64 -f tools/kali/Dockerfile -t pocket-kali-rootfs:arm64 .
+          docker run --rm --platform linux/arm64 pocket-kali-rootfs:arm64 \
+            sh -lc 'test "$(dpkg --print-architecture)" = arm64 && test -x /usr/bin/startxfce4 && dpkg-query -W kali-linux-headless kali-desktop-xfce'
+          cid="$(docker create --platform linux/arm64 pocket-kali-rootfs:arm64)"
+          trap 'docker rm -f "$cid" >/dev/null 2>&1 || true' EXIT
+          mkdir -p out
+          docker export "$cid" | zstd -T0 -10 -o out/pocket-kali-arm64.tar.zst
+          zstd -t out/pocket-kali-arm64.tar.zst
+          sha256sum out/pocket-kali-arm64.tar.zst > out/pocket-kali-arm64.tar.zst.sha256
+          sha256sum --check out/pocket-kali-arm64.tar.zst.sha256
+          # Save the complete listing before searching it. This avoids grep -q
+          # closing the pipe early and causing tar to fail with SIGPIPE.
+          tar --use-compress-program=unzstd -tf out/pocket-kali-arm64.tar.zst > out/archive-list.txt
+          grep -Eq '(^|/)etc/os-release$' out/archive-list.txt
+          grep -Eq '(^|/)usr/bin/startxfce4$' out/archive-list.txt
+          du -h out/pocket-kali-arm64.tar.zst
+
+      - name: Upload rootfs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pocket-kali-arm64-rootfs
+          path: |
+            out/pocket-kali-arm64.tar.zst
+            out/pocket-kali-arm64.tar.zst.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Publish rootfs release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: pocket-kali-rootfs
+          name: Pocket Kali ARM64 Rootfs
+          prerelease: true
+          make_latest: false
+          overwrite_files: true
+          files: |
+            out/pocket-kali-arm64.tar.zst
+            out/pocket-kali-arm64.tar.zst.sha256
+          fail_on_unmatched_files: true

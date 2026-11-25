@@ -771,9 +771,19 @@ jobs:
           DROIDDECK_BUILD_LABEL: ${{ steps.build-label.outputs.label }}
           SGDB_API_KEY: ${{ secrets.SGDB_API_KEY }}
         run: |
-          set -o pipefail
+          set -euo pipefail
           mkdir -p app/build
-          ./gradlew testReleaseUnitTest --console=plain --info --stacktrace -Drobolectric.logging=stderr -PndkVersion="$NDK_VERSION" 2>&1 | tee app/build/unit-tests.log
+          for attempt in 1 2 3; do
+            echo "Robolectric test attempt $attempt/3"
+            if ./gradlew testReleaseUnitTest --console=plain --info --stacktrace -Drobolectric.logging=stderr -PndkVersion="$NDK_VERSION" 2>&1 | tee app/build/unit-tests.log; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Unit tests failed; retrying after a short delay in case Maven Central is rate-limiting downloads."
+              sleep $((attempt * 30))
+            fi
+          done
+          exit 1
 
       # actions/cache only saves when the job succeeds, so a run whose tests died on a Maven 429 never filled the cache.
       # Save the complete jars even after a failed test step, when this run added some; a partial download is dropped first.
