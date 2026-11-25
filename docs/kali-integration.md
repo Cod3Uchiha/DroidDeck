@@ -1,13 +1,13 @@
-# Kali Linux desktop integration (ARM64)
+# Pocket Kali (PK) — integration plan
 
-This branch adds the first root-filesystem build prototype for a genuine Kali Linux ARM64 userspace with XFCE.
+Pocket Kali (PK) is building a genuine Kali Linux ARM64 userspace with XFCE for Android. This branch currently contains the first root-filesystem build prototype; Android app integration remains outstanding.
 
 ## Design constraints
 
 - Android remains the host OS; no boot image, bootloader, Android kernel, or device partitions are changed.
-- The Kali filesystem is separate from DroidDeck's existing Arch-based gaming runtime.
+- The Kali filesystem is separate from the existing Arch-based gaming runtime inherited from DroidDeck.
 - The build uses Kali's official `kali-rolling` repository and Kali packages. It is not an Arch theme or a renamed Debian image.
-- The target is ARM64 userspace. It uses the Android host kernel through DroidDeck's existing unprivileged process/runtime mechanisms.
+- The target is ARM64 userspace. It uses the Android host kernel through the Android host's unprivileged process/runtime mechanisms.
 - XFCE is the intended desktop. Desktop launch/display integration is a separate app-side task; this builder alone does not add a Kali launch button or claim that the desktop already launches.
 
 ## Build prototype
@@ -27,6 +27,6 @@ A Kali rootfs does not grant kernel capabilities. In particular, it does not ena
 ## Next app integration work
 
 1. Add an independent Kali install record, download/verification flow, and storage directory under app-private storage.
-2. Reuse DroidDeck's tested PRoot launcher and bind only the Android resources needed by the guest.
-3. Add a dedicated XFCE session entry using DroidDeck's existing display/compositor path, without replacing the gaming runtime.
+2. Reuse the base project's PRoot launcher and bind only the Android resources needed by the guest.
+3. Add a dedicated XFCE session entry using the base project's existing display/compositor path, without replacing the gaming runtime.
 4. Test process restrictions, audio, input, Vulkan/GL limitations, suspend/resume, and cleanup on actual Snapdragon 8 Gen 1 hardware.
